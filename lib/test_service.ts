@@ -54,6 +54,8 @@ export class TestService extends Construct {
     });
     api.root.addMethod("GET", getOrdersIntegration);
     api.root.addMethod("POST", postOrdersIntegration);
+    const getOrderAPI = api.root.addResource("{id}");
+    getOrderAPI.addMethod("GET", getOrdersIntegration);
 
     /*api.addGatewayResponse('GatewayResponse', {
             type: ResponseType.UNAUTHORIZED,

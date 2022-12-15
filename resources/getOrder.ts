@@ -1,31 +1,29 @@
-import { DynamoDB, Lambda } from "aws-sdk";
-import { v4 as uuidv4 } from "uuid";
+import { DynamoDB } from "aws-sdk";
 
 export default async (event: any, context: any) => {
   const dynamo = new DynamoDB.DocumentClient();
-
-  const body = JSON.parse(event.body);
+  console.log("EVENT: ", event, "CONTEXT: ", context);
+  const paramKey = event.params;
 
   const params = {
     TableName: "TestStack-OrdersOrdersTest24902276-1E0FNBYR5NK5G",
-    Item: {
-      id: uuidv4(),
-      Customer_Name: body.customer_name,
-      Items: body.items,
+    Key: {
+      id: paramKey,
     },
   };
 
   try {
-    await dynamo.put(params).promise();
+    const data = await dynamo.get(params).promise();
+    console.log("RETRIEVED DATA: ", data);
     return {
       headers: {
         "Access-Control-Allow-Headers": "Content-Type",
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS, GET, POST",
+        "Access-Control-Allow-Methods": "OPTIONS, GET",
       },
-      statusCode: 201,
-      body: "Succesfully uploaded data",
+      statusCode: 200,
+      body: JSON.stringify(data.Item),
     };
   } catch (err) {
     console.log("ERROR", err);

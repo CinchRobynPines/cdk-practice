@@ -4,7 +4,7 @@ export default async (event: any, context: any) => {
   const dynamo = new DynamoDB.DocumentClient();
 
   const params = {
-    TableName: "TestStack-OrdersOrdersTest24902276-11U7JQZ0SX9JJ",
+    TableName: "TestStack-OrdersOrdersTest24902276-1E0FNBYR5NK5G",
   };
 
   try {
