@@ -5,12 +5,14 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import * as iam from "aws-cdk-lib/aws-iam";
+import { TableName } from "../utils/tableDetails";
 
 export class TestService extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
     const table = new dynamodb.Table(this, "Orders-Test", {
+      tableName: TableName,
       readCapacity: 1,
       writeCapacity: 1,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -42,20 +44,27 @@ export class TestService extends Construct {
     const postOrdersIntegration = new apigateway.LambdaIntegration(getHandler, {
       requestTemplates: { "application/json": '{ "statusCode": "201" }' },
     });
+    const deleteOrdersIntegration = new apigateway.LambdaIntegration(
+      getHandler,
+      {
+        requestTemplates: { "application/json": '{ "statusCode": "204" }' },
+      }
+    );
     const api = new apigateway.RestApi(this, "OrdersApi", {
       restApiName: "OrdersService",
       description: "an orders service",
       defaultCorsPreflightOptions: {
         allowHeaders: ["Content-Type"],
-        allowMethods: ["OPTIONS", "GET", "POST"],
+        allowMethods: ["OPTIONS", "GET", "POST", "DELETE"],
         allowCredentials: false,
         allowOrigins: ["*"],
       },
     });
     api.root.addMethod("GET", getOrdersIntegration);
     api.root.addMethod("POST", postOrdersIntegration);
-    const getOrderAPI = api.root.addResource("{id}");
-    getOrderAPI.addMethod("GET", getOrdersIntegration);
+    const idOrderAPI = api.root.addResource("{id}");
+    idOrderAPI.addMethod("GET", getOrdersIntegration);
+    idOrderAPI.addMethod("DELETE", deleteOrdersIntegration);
 
     /*api.addGatewayResponse('GatewayResponse', {
             type: ResponseType.UNAUTHORIZED,

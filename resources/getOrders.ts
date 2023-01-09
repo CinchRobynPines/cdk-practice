@@ -1,15 +1,15 @@
 import { DynamoDB } from "aws-sdk";
+import { TableName } from "../utils/tableDetails";
 
 export default async (event: any, context: any) => {
   const dynamo = new DynamoDB.DocumentClient();
 
   const params = {
-    TableName: "TestStack-OrdersOrdersTest24902276-1E0FNBYR5NK5G",
+    TableName: TableName,
   };
 
   try {
     const data = await dynamo.scan(params).promise();
-    console.log("RETRIEVED DATA: ", data);
     return {
       headers: {
         "Access-Control-Allow-Headers": "Content-Type",

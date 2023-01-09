@@ -1,5 +1,6 @@
-import { DynamoDB, Lambda } from "aws-sdk";
+import { DynamoDB } from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
+import { TableName } from "../utils/tableDetails";
 
 export default async (event: any, context: any) => {
   const dynamo = new DynamoDB.DocumentClient();
@@ -7,7 +8,7 @@ export default async (event: any, context: any) => {
   const body = JSON.parse(event.body);
 
   const params = {
-    TableName: "TestStack-OrdersOrdersTest24902276-1E0FNBYR5NK5G",
+    TableName: TableName,
     Item: {
       id: uuidv4(),
       Customer_Name: body.customer_name,

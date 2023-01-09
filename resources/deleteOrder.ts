@@ -3,26 +3,27 @@ import { TableName } from "../utils/tableDetails";
 
 export default async (event: any, context: any) => {
   const dynamo = new DynamoDB.DocumentClient();
-  const paramKey = event.params;
+  const paramKey: string = event.pathParameters.id;
+  console.log(event);
 
   const params = {
     TableName: TableName,
-    Key: {
-      id: paramKey,
-    },
+    Key: { id: paramKey },
   };
 
+  console.log("partition key: ", paramKey);
+
   try {
-    const data = await dynamo.get(params).promise();
+    const response = await dynamo.delete(params).promise();
+    console.log("RETRIEVED RESPONSE: ", response);
     return {
       headers: {
         "Access-Control-Allow-Headers": "Content-Type",
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS, GET",
+        "Access-Control-Allow-Methods": "OPTIONS, DELETE",
       },
-      statusCode: 200,
-      body: JSON.stringify(data.Item),
+      statusCode: 204,
     };
   } catch (err) {
     console.log("ERROR", err);

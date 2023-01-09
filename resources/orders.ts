@@ -1,6 +1,7 @@
 import postOrders from "./postOrders";
 import getOrders from "./getOrders";
 import getOrder from "./getOrder";
+import deleteOrder from "./deleteOrder";
 
 exports.main = async (event: any, context: any) => {
   console.log(event.httpMethod);
@@ -14,6 +15,9 @@ exports.main = async (event: any, context: any) => {
         return getOrder(event, context);
       }
       return getOrders(event, context);
+    }
+    case "DELETE": {
+      return deleteOrder(event, context);
     }
     default: {
       return {
