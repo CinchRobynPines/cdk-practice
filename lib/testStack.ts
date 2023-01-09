@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { TestService } from './test_service';
+import { TestService } from './testService';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class TestStack extends cdk.Stack {

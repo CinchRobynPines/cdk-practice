@@ -1,5 +1,4 @@
 import { DynamoDB } from "aws-sdk";
-import { v4 as uuidv4 } from "uuid";
 import { TableName } from "../utils/tableDetails";
 
 export default async (event: any, context: any) => {

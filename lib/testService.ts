@@ -72,21 +72,12 @@ export class TestService extends Construct {
         allowOrigins: ["*"],
       },
     });
-    api.root.addMethod("GET", getOrdersIntegration);
-    api.root.addMethod("POST", postOrdersIntegration);
     const idOrderAPI = api.root.addResource("{id}");
     idOrderAPI.addMethod("GET", getOrdersIntegration);
     idOrderAPI.addMethod("DELETE", deleteOrdersIntegration);
     idOrderAPI.addMethod("PUT", updateOrdersIntegration);
-
-    /*api.addGatewayResponse('GatewayResponse', {
-            type: ResponseType.UNAUTHORIZED,
-            statusCode: '403',
-            responseHeaders: {
-              // Note the quoting around the header value:
-              // https://blog.ilearnaws.com/2020/05/27/error-unable-to-put-integration-response-on-options-for-resource-at-path/
-              'Access-Control-Allow-Origin': "'*'",
-            },
-          });*/
+    
+    api.root.addMethod("GET", getOrdersIntegration);
+    api.root.addMethod("POST", postOrdersIntegration);
   }
 }

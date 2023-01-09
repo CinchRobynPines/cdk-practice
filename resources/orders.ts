@@ -2,7 +2,7 @@ import postOrders from "./postOrders";
 import getOrders from "./getOrders";
 import getOrder from "./getOrder";
 import deleteOrder from "./deleteOrder";
-import updateOrder from "./UpdateOrder";
+import updateOrder from "./update-Order";
 
 exports.main = async (event: any, context: any) => {
   console.log(event.httpMethod);
