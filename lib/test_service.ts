@@ -21,7 +21,7 @@ export class TestService extends Construct {
 
     table.grantReadWriteData;
 
-    const getHandler = new aws_lambda_nodejs.NodejsFunction(
+    const ordersHandler = new aws_lambda_nodejs.NodejsFunction(
       this,
       "OrdersHandlerGet",
       {
@@ -36,16 +36,28 @@ export class TestService extends Construct {
       resources: ["*"],
     });
 
-    getHandler.addToRolePolicy(lambdaPolicy);
+    ordersHandler.addToRolePolicy(lambdaPolicy);
 
-    const getOrdersIntegration = new apigateway.LambdaIntegration(getHandler, {
-      requestTemplates: { "application/json": '{ "statusCode": "200" }' },
-    });
-    const postOrdersIntegration = new apigateway.LambdaIntegration(getHandler, {
-      requestTemplates: { "application/json": '{ "statusCode": "201" }' },
-    });
+    const getOrdersIntegration = new apigateway.LambdaIntegration(
+      ordersHandler,
+      {
+        requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+      }
+    );
+    const postOrdersIntegration = new apigateway.LambdaIntegration(
+      ordersHandler,
+      {
+        requestTemplates: { "application/json": '{ "statusCode": "201" }' },
+      }
+    );
+    const updateOrdersIntegration = new apigateway.LambdaIntegration(
+      ordersHandler,
+      {
+        requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+      }
+    );
     const deleteOrdersIntegration = new apigateway.LambdaIntegration(
-      getHandler,
+      ordersHandler,
       {
         requestTemplates: { "application/json": '{ "statusCode": "204" }' },
       }
@@ -55,7 +67,7 @@ export class TestService extends Construct {
       description: "an orders service",
       defaultCorsPreflightOptions: {
         allowHeaders: ["Content-Type"],
-        allowMethods: ["OPTIONS", "GET", "POST", "DELETE"],
+        allowMethods: ["OPTIONS", "GET", "POST", "DELETE", "PUT"],
         allowCredentials: false,
         allowOrigins: ["*"],
       },
@@ -65,6 +77,7 @@ export class TestService extends Construct {
     const idOrderAPI = api.root.addResource("{id}");
     idOrderAPI.addMethod("GET", getOrdersIntegration);
     idOrderAPI.addMethod("DELETE", deleteOrdersIntegration);
+    idOrderAPI.addMethod("PUT", updateOrdersIntegration);
 
     /*api.addGatewayResponse('GatewayResponse', {
             type: ResponseType.UNAUTHORIZED,

@@ -6,27 +6,28 @@ export default async (event: any, context: any) => {
   const dynamo = new DynamoDB.DocumentClient();
 
   const body = JSON.parse(event.body);
+  const paramKey = event.pathParameters.id;
 
   const params = {
     TableName: TableName,
-    Item: {
-      id: uuidv4(),
-      Customer_Name: body.customer_name,
-      Ordered_Items: body.items,
+    Key: { id: paramKey },
+    UpdateExpression: `SET Ordered_Items = :x`,
+    ExpressionAttributeValues: {
+      ":x": body.items,
     },
   };
 
   try {
-    await dynamo.put(params).promise();
+    await dynamo.update(params).promise();
     return {
       headers: {
         "Access-Control-Allow-Headers": "Content-Type",
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS, GET, POST",
+        "Access-Control-Allow-Methods": "OPTIONS, PUT",
       },
-      statusCode: 201,
-      body: "Succesfully uploaded data",
+      statusCode: 200,
+      body: "Succesfully updated data",
     };
   } catch (err) {
     console.log("ERROR", err);
